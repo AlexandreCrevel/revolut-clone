@@ -4,5 +4,7 @@ export default {
   background: '#F5F5F5',
   dark: '#141518',
   gray: '#626D77',
+  white: '#FFFFFF',
+  black: '#000000',
   lightGray: '#D8DCE2',
 };
