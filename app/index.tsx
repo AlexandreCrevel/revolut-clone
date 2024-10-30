@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     textTransform: 'uppercase',
     color: 'white',
+    textAlign: 'center',
     fontWeight: '900',
   },
   buttons: {
