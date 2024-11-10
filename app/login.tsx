@@ -3,8 +3,11 @@ import OrSeparaor from '@/components/OrSeparaor';
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
 import { LoginType } from '@/types/LoginType';
+import { isClerkAPIResponseError, useSignIn } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -16,8 +19,37 @@ import {
 const Page = () => {
   const [countryCode, setCountryCode] = useState('+33');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const router = useRouter();
+  const { signIn } = useSignIn();
   const onSignIn = async (type: LoginType) => {
-    console.log('onSignup');
+    try {
+      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+      const { supportedFirstFactors } = await signIn!.create({
+        identifier: fullPhoneNumber,
+      });
+      const firstPhoneFactor: any = supportedFirstFactors?.find(
+        (factor) => factor.strategy === 'phone_code'
+      );
+
+      const { phoneNumberId } = firstPhoneFactor;
+
+      await signIn!.prepareFirstFactor({
+        strategy: 'phone_code',
+        phoneNumberId,
+      });
+
+      router.push({
+        pathname: '/verify/[phone]',
+        params: { phone: fullPhoneNumber, signin: 'true' },
+      });
+    } catch (error) {
+      console.error('Error Signing In', JSON.stringify(error, null, 2));
+      if (isClerkAPIResponseError(error)) {
+        if (error.errors[0].code === 'form_identifier_not_found') {
+          Alert.alert('Error', error.errors[0].message);
+        }
+      }
+    }
   };
   return (
     <KeyboardAvoidingView
@@ -73,9 +105,9 @@ const Page = () => {
         />
         <LoginButton
           onSignIn={onSignIn}
-          type={LoginType.apple}
-          text='Continue with Apple'
-          icon='logo-apple'
+          type={LoginType.github}
+          text='Continue with Github'
+          icon='logo-github'
         />
       </View>
     </KeyboardAvoidingView>

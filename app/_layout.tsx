@@ -1,5 +1,6 @@
 import BackButton from '@/components/BackButton';
 import Colors from '@/constants/Colors';
+import { ClerkProvider } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
@@ -10,6 +11,7 @@ import { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { CLERK_PUBLISHABLE_KEY, tokenCache } from './(auth)/utilsFunctions';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -95,10 +97,15 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style='light' />
-      <InitialLayout />
-    </GestureHandlerRootView>
+    <ClerkProvider
+      publishableKey={CLERK_PUBLISHABLE_KEY!}
+      tokenCache={tokenCache}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style='light' />
+        <InitialLayout />
+      </GestureHandlerRootView>
+    </ClerkProvider>
   );
 };
 

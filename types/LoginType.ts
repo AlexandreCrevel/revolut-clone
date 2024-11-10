@@ -4,4 +4,5 @@ export enum LoginType {
   google = 'google',
   apple = 'apple',
   facebook = 'facebook',
+  github = 'github',
 }

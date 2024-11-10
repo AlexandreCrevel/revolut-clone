@@ -1,6 +1,7 @@
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
-import { Link } from 'expo-router';
+import { useSignUp } from '@clerk/clerk-expo';
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -14,8 +15,22 @@ import {
 const Page = () => {
   const [countryCode, setCountryCode] = useState('+33');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const router = useRouter();
+  const { signUp } = useSignUp();
+
   const onSignup = async () => {
-    console.log('onSignup');
+    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+    try {
+      await signUp!.create({
+        phoneNumber: fullPhoneNumber,
+      });
+      router.push({
+        pathname: '/verify/[phone]',
+        params: { phone: fullPhoneNumber },
+      });
+    } catch (error) {
+      console.error('Error Signing Up', error);
+    }
   };
   return (
     <KeyboardAvoidingView
