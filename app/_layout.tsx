@@ -91,6 +91,17 @@ const InitialLayout = () => {
           presentation: 'modal',
         }}
       />
+      <Stack.Screen
+        name='verify/[phone]'
+        options={{
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerLeft: renderHeaderLeft,
+        }}
+      />
     </Stack>
   );
 };
