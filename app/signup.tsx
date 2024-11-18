@@ -30,7 +30,7 @@ const Page = () => {
         params: { phone: fullPhoneNumber },
       });
     } catch (error) {
-      console.error('Error Signing Up', error);
+      console.error('Error Signing Up', JSON.stringify(error, null, 2));
     }
   };
   return (
